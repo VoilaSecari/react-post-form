@@ -3,22 +3,35 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/css/index.css";
 import axios from "axios";
 
-//useState
-const [postData, setPostData] = useState(initialPostData);
-
-const initialPostData = {
-  author: "",
-  title: "",
-  body: "",
-  public: false,
-};
-
 export default function App() {
+  //costanti
+  const initialPostData = {
+    author: "",
+    title: "",
+    body: "",
+    public: false,
+  };
+  //useState
+  const [postData, setPostData] = useState(initialPostData);
+
+  //handles
+  const handleInputChange = (e) => {
+    setPostData({ ...postData, [e.target.name]: e.target.value });
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    //debug
+    console.log(postData);
+    setPostData(initialPostData);
+  };
+
   return (
     <main className="container p-3">
       <h1 className="mt-3">Il form con React</h1>
       <hr />
-      <form>
+      <form onSubmit={handleFormSubmit}>
         <div className="row g-3">
           <div className="col">
             <label htmlFor="author" className="form-label">
@@ -31,9 +44,7 @@ export default function App() {
               placeholder="Autore"
               id="author"
               value={postData.author}
-              onChange={(e) => {
-                setPostData({ ...postData, [e.target.name]: e.target.value });
-              }}
+              onChange={handleInputChange}
             />
           </div>
           <div className="col">
@@ -47,9 +58,7 @@ export default function App() {
               placeholder="Titolo"
               id="title"
               value={postData.title}
-              onChange={(e) => {
-                setPostData({ ...postData, [e.target.name]: e.target.value });
-              }}
+              onChange={handleInputChange}
             />
           </div>
         </div>
@@ -65,9 +74,7 @@ export default function App() {
             placeholder="Contenuto del post..."
             id="body"
             value={postData.body}
-            onChange={(e) => {
-              setPostData({ ...postData, [e.target.name]: e.target.value });
-            }}
+            onChange={handleInputChange}
           />
         </div>
         <div className="col-12 mt-4">
