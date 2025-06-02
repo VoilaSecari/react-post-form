@@ -13,17 +13,28 @@ export default function App() {
   };
   //useState
   const [postData, setPostData] = useState(initialPostData);
+  const [submittedData, setSubmittedData] = useState();
 
   //handles
   const handleInputChange = (e) => {
-    setPostData({ ...postData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    setPostData({ ...postData, [name]: type === "checkbox" ? checked : value });
   };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    //debug
-    console.log(postData);
+    //sakva dati submitted
+    setSubmittedData(postData);
+
+    //axios
+    axios
+      .post("https://67c5b4f3351c081993fb1ab6.mockapi.io/api/posts", postData)
+      .then((res) => {
+        console.log(res.data);
+      });
+
+    //reset campi vuoti
     setPostData(initialPostData);
   };
 
@@ -79,7 +90,14 @@ export default function App() {
         </div>
         <div className="col-12 mt-4">
           <div className="form-check">
-            <input className="form-check-input" type="checkbox" id="public" />
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="public"
+              name="public"
+              checked={postData.public}
+              onChange={handleInputChange}
+            />
             <label className="form-check-label" htmlFor="public">
               Voglio che il contenuto sia pubblico
             </label>
@@ -93,9 +111,14 @@ export default function App() {
       </form>
       <hr />
       {/* qui voglio vedere il contenuto per capire se è stato mandato */}
-      <ul>
-        <li></li>
-      </ul>
+      {submittedData && (
+        <ul>
+          <li>Autore: {submittedData.author}</li>
+          <li>Titolo: {submittedData.title}</li>
+          <li>Contenuto: {submittedData.body}</li>
+          <li>Post pubblico: {submittedData.public ? "Sì" : "No"}</li>
+        </ul>
+      )}
     </main>
   );
 }
